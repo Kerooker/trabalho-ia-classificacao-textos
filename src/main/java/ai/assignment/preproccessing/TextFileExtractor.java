@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,34 +16,41 @@ public class TextFileExtractor {
 
     private File file;
     private String allTexts;
+    private AtomicLong counter;
 
-    public TextFileExtractor(File file) {
+    public TextFileExtractor(File file, AtomicLong counter) {
         this.file = file;
+        this.counter = counter;
     }
 
-    public void extractTexts() throws IOException {
-        allTexts = new String(Files.readAllBytes(file.toPath()), StandardCharsets.ISO_8859_1);
+    public void extractTexts()  {
+        try {
+            allTexts = new String(Files.readAllBytes(file.toPath()), StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            //Shouldn't happen
+        }
         allTexts = allTexts
                 .replaceAll(Pattern.compile("Newsgroup: .*\\ndocument_id:.*\\n",
                         Pattern.CASE_INSENSITIVE).pattern(), "");
         String newsGroup = file.getName().replace(".txt", "");
 
-        File newsGroupDirectory = new File(file.getParent(), newsGroup);
-        if (!newsGroupDirectory.mkdir()) {
-            throw new RuntimeException("Group already extracted");
-        }
 
         Stream<String> splitTexts = splitTextsByHeader();
 
         List<String> filteredTexts = splitTexts.collect(Collectors.toList());
 
         System.out.println("Extracting texts for category " + newsGroup);
-        for (int i = 0; i < filteredTexts.size(); i++) {
-            String text = filteredTexts.get(i);
-            File file = new File(newsGroupDirectory, String.valueOf(i));
-            FileWriter writer = new FileWriter(file);
-            writer.write(text);
-            writer.close();
+        for (String text : filteredTexts) {
+            File file = new File(String.valueOf(counter.incrementAndGet()));
+            FileWriter writer;
+            try {
+                writer = new FileWriter(file);
+
+                writer.write(text);
+                writer.close();
+            } catch (IOException e) {
+                //Shouldn't happen
+            }
         }
     }
 
