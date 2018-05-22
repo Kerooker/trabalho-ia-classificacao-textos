@@ -37,6 +37,7 @@ public class TextPreProcessor {
         try {
             FileOutputStream outputStream = new FileOutputStream(textFile, false);
             outputStream.write(pipelinedText.getBytes());
+            outputStream.flush();
             outputStream.close();
         } catch (IOException e) {
             throw new RuntimeException("Impossible to happen");

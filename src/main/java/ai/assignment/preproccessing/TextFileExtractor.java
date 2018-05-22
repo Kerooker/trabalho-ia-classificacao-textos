@@ -41,7 +41,7 @@ public class TextFileExtractor {
 
         System.out.println("Extracting texts for category " + newsGroup);
         for (String text : filteredTexts) {
-            File file = new File(String.valueOf(counter.incrementAndGet()));
+            File file = new File("corpus", String.valueOf(counter.incrementAndGet()));
             FileWriter writer;
             try {
                 writer = new FileWriter(file);
