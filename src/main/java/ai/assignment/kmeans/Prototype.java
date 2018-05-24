@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Prototype extends Point {
 
-    private BigDecimal[] coordinates;
+    public static Prototype NONE = new Prototype((BigDecimal[]) null);
 
     public Prototype(BigDecimal[] coordinates) {
         super(coordinates);

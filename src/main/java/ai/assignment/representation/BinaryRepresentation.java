@@ -16,7 +16,7 @@ public class BinaryRepresentation {
 
         IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
             String index = it.getName();
-            if (!index.matches("\\d"))return;
+            if (!index.matches("\\d*"))return;
             File processedFile = new File("binary_representation", index);
 
             int[] textVector = new int[tokens.size()];

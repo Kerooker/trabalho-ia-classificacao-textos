@@ -2,14 +2,15 @@ package ai.assignment.kmeans;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SimpleKmeans {
 
-    private LinkedHashMap<Point, Prototype> dataSet = new LinkedHashMap<>();
+    private ConcurrentHashMap<Point, Prototype> dataSet = new ConcurrentHashMap<>();
 
     private int k; //Number of clusters
     private int maxIterations;
@@ -19,7 +20,9 @@ public class SimpleKmeans {
 
 
     public SimpleKmeans(Point[] dataSet, int k, int maxIterations, BigDecimal tolerance) {
-        for (Point p : dataSet) this.dataSet.put(p, null);
+        for (Point p : dataSet){
+            this.dataSet.put(p, Prototype.NONE);
+        }
 
         this.k = k;
         this.maxIterations = maxIterations;
@@ -54,10 +57,12 @@ public class SimpleKmeans {
     }
 
     private void adjustPointPrototypesToNearestCentroid() {
-        for(Point p : dataSet.keySet()) {
-            Prototype nearestPrototype = p.findNearestPrototype(centroids);
-            dataSet.put(p, nearestPrototype);
-        }
+        AtomicInteger currentPointProcessed = new AtomicInteger();
+        dataSet.keySet().parallelStream().forEach(point -> {
+            Prototype nearestPrototype = point.findNearestPrototype(centroids);
+            dataSet.put(point, nearestPrototype);
+            currentPointProcessed.getAndIncrement();
+        });
     }
 
     private BigDecimal adjustCentroidsToAverageOfThePoints() {

@@ -20,9 +20,13 @@ public abstract class Point {
     }
 
     public Prototype findNearestPrototype(Prototype[] centroids) {
-        Prototype currentMin = centroids[0];
+        Prototype currentMin = null;
 
         for (Prototype p : centroids) {
+            if(currentMin == null){
+                currentMin = p;
+                continue;
+            }
             BigDecimal currentMinDistance = distanceTo(currentMin);
             BigDecimal possibleMinDistance = distanceTo(p);
 
@@ -30,7 +34,6 @@ public abstract class Point {
                 currentMin = p;
             }
 
-            return currentMin;
         }
         return currentMin;
     }

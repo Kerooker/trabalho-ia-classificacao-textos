@@ -14,4 +14,11 @@ public class IndividualTextFilesObtainer {
 
         return individualTexts.stream();
     }
+
+    public static Stream<File> getIndividualTfIdfFiles() {
+        File tfIdfDirectory = new File("tf_idf_representation");
+
+        List<File> individualTexts = Arrays.asList(tfIdfDirectory.listFiles());
+        return individualTexts.stream();
+    }
 }
