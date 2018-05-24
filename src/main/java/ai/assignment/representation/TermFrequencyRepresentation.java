@@ -17,8 +17,12 @@ public class TermFrequencyRepresentation {
 
         IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
             String index = it.getName();
-            if (!index.matches("\\d"))return;
-            File processedFile = new File("term_frequency_representation", index);
+            if (!index.matches("\\d*"))return;
+            File directory = new File("term_frequency_representation");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            File processedFile = new File(directory, index);
 
             int[] textVector = new int[tokens.size()];
 
@@ -31,8 +35,9 @@ public class TermFrequencyRepresentation {
                     textVector[i] = amount;
                 }
 
-                System.out.println("Representing token frequency: " + it.getName());
                 String allPositions = Arrays.toString(textVector);
+
+                System.out.println("Representing token frequency: " + it.getName());
                 FileOutputStream stream = new FileOutputStream(processedFile);
                 stream.write(allPositions.getBytes());
                 stream.flush();

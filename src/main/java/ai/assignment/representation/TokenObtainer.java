@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class TokenObtainer {
 
     public static TreeSet<String> obtainTokensInOrder() {
-        File tokens = new File("corpus", "ordered_tokens");
+        File tokens = new File("tokens", "ordered_tokens");
+        new File("tokens").mkdir();
         if (tokens.exists()) {
             try {
                 return new TreeSet<>(Files.readAllLines(tokens.toPath()));
@@ -31,11 +32,11 @@ public class TokenObtainer {
     private static void buildTokenList() {
         ConcurrentHashMap<String, Long> map = new ConcurrentHashMap<>();
         try {
-            File createdFile = new File("corpus", "ordered_tokens");
+            File createdFile = new File("tokens", "ordered_tokens");
 
             IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
                 try {
-                    String text = String.join("",Files.readAllLines(it.toPath()));
+                    String text = String.join("", Files.readAllLines(it.toPath()));
                     String[] words = text.split("\\|");
                     System.out.println("Processing tokens of text " + it.getName());
 
@@ -58,6 +59,7 @@ public class TokenObtainer {
             List<String> uniqueStringWithMoreThanOneToken = map.entrySet()
                     .parallelStream()
                     .filter(it -> it.getValue() > 50)
+                    .filter(it -> it.getKey() != null && !it.getKey().equals(""))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
 
