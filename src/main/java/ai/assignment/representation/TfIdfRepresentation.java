@@ -20,7 +20,7 @@ public class TfIdfRepresentation {
 
         HashMap<String, BigDecimal> tokenIDF = InverseDocumentFrequencyRepresentation.getTokenInverseDocumentFrequencies();
 
-        IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
+        IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
                 String index = it.getName();
                 if (!index.matches("\\d*"))return;
                 File directory = new File("tf_idf_representation");

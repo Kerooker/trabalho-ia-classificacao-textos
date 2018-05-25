@@ -31,8 +31,8 @@ public class SimpleKmeans {
     public void executeSimpleKmeans() {
         initializeCentroids();
         executeIterations();
-        //todo tratar resultados
     }
+
 
     private void initializeCentroids() {
         centroids = new Prototype[k];
@@ -95,5 +95,13 @@ public class SimpleKmeans {
         int randomPointIndex = ThreadLocalRandom.current().nextInt(amountOfPoints);
 
         return new ArrayList<>(dataSet.keySet()).get(randomPointIndex);
+    }
+
+    public ConcurrentHashMap<Point, Prototype> getDataSet() {
+        return dataSet;
+    }
+
+    public Prototype[] getCentroids() {
+        return centroids;
     }
 }

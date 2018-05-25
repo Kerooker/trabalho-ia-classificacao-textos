@@ -6,8 +6,8 @@ import java.math.MathContext;
 
 public class EuclidianPoint extends Point {
 
-    public EuclidianPoint(BigDecimal[] coordinates) {
-        super(coordinates);
+    public EuclidianPoint(BigDecimal[] coordinates, int ownerText) {
+        super(coordinates, ownerText);
     }
 
     @Override

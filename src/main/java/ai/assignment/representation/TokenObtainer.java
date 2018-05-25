@@ -34,7 +34,7 @@ public class TokenObtainer {
         try {
             File createdFile = new File("tokens", "ordered_tokens");
 
-            IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
+            IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
                 try {
                     String text = String.join("", Files.readAllLines(it.toPath()));
                     String[] words = text.split("\\|");

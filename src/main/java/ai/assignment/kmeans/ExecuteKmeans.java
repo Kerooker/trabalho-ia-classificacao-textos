@@ -15,6 +15,14 @@ public class ExecuteKmeans {
         Point[] points = loadAllPoints();
         SimpleKmeans simpleKmeans = new SimpleKmeans(points, 20, 1000, new BigDecimal("0.01"));
         simpleKmeans.executeSimpleKmeans();
+
+        List<Prototype> prototypes = Arrays.asList(simpleKmeans.getCentroids());
+
+        List<String> relation = simpleKmeans.getDataSet().entrySet().stream().map(it ->
+                it.getKey().ownerText + " " + prototypes.indexOf(it.getValue()))
+                .collect(Collectors.toList());
+
+
     }
 
     private static Point[] loadAllPoints() {
@@ -35,7 +43,7 @@ public class ExecuteKmeans {
                 System.out.println("Mapping coordinates for " + textFile.getName());
                 BigDecimal[] coordinateArray = coordinates.toArray(new BigDecimal[0]);
 
-                points.add(new EuclidianPoint(coordinateArray));
+                points.add(new EuclidianPoint(coordinateArray, Integer.parseInt(textFile.getName())));
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -21,4 +21,12 @@ public class IndividualTextFilesObtainer {
         List<File> individualTexts = Arrays.asList(tfIdfDirectory.listFiles());
         return individualTexts.stream();
     }
+
+    public static Stream<File> getIndividualTextProcessedFiles() {
+        File corpusDirectory = new File("pre_processed_texts");
+
+        List<File> individualTexts = Arrays.asList(corpusDirectory.listFiles());
+
+        return individualTexts.stream();
+    }
 }

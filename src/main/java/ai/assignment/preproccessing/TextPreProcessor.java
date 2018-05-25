@@ -23,7 +23,7 @@ public class TextPreProcessor {
 
             System.out.println("Pipelining text " + textFile.getName());
             String pipelinedText = executePipelineOnText(fileContent);
-            saveProcessedTextToFile(pipelinedText, textFile);
+            saveProcessedTextToFile(pipelinedText, textFile.getName());
         });
     }
 
@@ -33,9 +33,13 @@ public class TextPreProcessor {
         return pipeliner.getText();
     }
 
-    private static void saveProcessedTextToFile(String pipelinedText, File textFile) {
+    private static void saveProcessedTextToFile(String pipelinedText, String textFile) {
+        File directory = new File("pre_processed_texts");
+        directory.mkdir();
         try {
-            FileOutputStream outputStream = new FileOutputStream(textFile, false);
+            File outputFile = new File(directory, textFile);
+            outputFile.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(outputFile, false);
             outputStream.write(pipelinedText.getBytes());
             outputStream.flush();
             outputStream.close();

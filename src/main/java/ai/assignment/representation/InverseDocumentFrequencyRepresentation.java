@@ -48,7 +48,7 @@ public class InverseDocumentFrequencyRepresentation {
         List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
 
         List<File> documents = IndividualTextFilesObtainer
-                .getAllIndividualTextFiles().filter(it -> it.getName().matches("\\d+"))
+                .getIndividualTextProcessedFiles().filter(it -> it.getName().matches("\\d+"))
                 .collect(Collectors.toList());
 
         int totalAmountOfDocuments = documents.size();

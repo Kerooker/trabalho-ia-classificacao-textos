@@ -4,10 +4,18 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class Point {
 
     protected BigDecimal[] coordinates;
+    protected int ownerText = -1;
+
+    public Point(BigDecimal[] coordinates, int ownerText) {
+        this.coordinates = coordinates;
+        this.ownerText = ownerText;
+    }
 
     public Point(BigDecimal[] coordinates) {
         this.coordinates = coordinates;
@@ -81,11 +89,18 @@ public abstract class Point {
         }
 
         if (referencePoint instanceof EuclidianPoint) {
-            return new EuclidianPoint(averageCoordinates);
+            return new EuclidianPoint(averageCoordinates, -1);
         }else {
             //TODO
             return null;
         }
+    }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("coordinates", coordinates)
+                .append("ownerText", ownerText)
+                .toString();
     }
 }

@@ -14,7 +14,7 @@ public class BinaryRepresentation {
     public static void main(String[] args) {
         List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
 
-        IndividualTextFilesObtainer.getAllIndividualTextFiles().parallel().forEach(it -> {
+        IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
             String index = it.getName();
             if (!index.matches("\\d*"))return;
             File directory = new File("binary_representation");
