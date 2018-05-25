@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SimpleKmeans {
@@ -32,6 +31,7 @@ public class SimpleKmeans {
     public void executeSimpleKmeans() {
         initializeCentroids();
         executeIterations();
+        //todo tratar resultados
     }
 
     private void initializeCentroids() {
@@ -57,11 +57,9 @@ public class SimpleKmeans {
     }
 
     private void adjustPointPrototypesToNearestCentroid() {
-        AtomicInteger currentPointProcessed = new AtomicInteger();
         dataSet.keySet().parallelStream().forEach(point -> {
             Prototype nearestPrototype = point.findNearestPrototype(centroids);
             dataSet.put(point, nearestPrototype);
-            currentPointProcessed.getAndIncrement();
         });
     }
 
