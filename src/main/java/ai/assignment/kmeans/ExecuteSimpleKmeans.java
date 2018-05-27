@@ -1,6 +1,10 @@
 package ai.assignment.kmeans;
 
 import ai.assignment.common.IndividualTextFilesObtainer;
+import ai.assignment.kmeans.calculator.data.Point;
+import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -8,19 +12,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+public class ExecuteSimpleKmeans {
 
-public class ExecuteKmeans {
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
-        SimpleKmeans simpleKmeans = new SimpleKmeans(points, 20, 1000, new BigDecimal("0.01"));
+        int k = 2;
+        SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 1000,
+                new BigDecimal("100.0"), DistanceCalculator.COSINE_SIMILARITY);
         simpleKmeans.executeSimpleKmeans();
 
-        List<Prototype> prototypes = Arrays.asList(simpleKmeans.getCentroids());
+        String result = simpleKmeans.result();
 
-        List<String> relation = simpleKmeans.getDataSet().entrySet().stream().map(it ->
-                it.getKey().ownerText + " " + prototypes.indexOf(it.getValue()))
-                .collect(Collectors.toList());
+        File directory = new File("answer");
+        directory.mkdir();
+        File kmeansFile = new File(directory, "simple_kmeans_cosine");
+
+        FileOutputStream stream = new FileOutputStream(kmeansFile);
+        stream.write(result.getBytes());
+        stream.flush();
+        stream.close();
+
+        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
+        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
+        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
+        silhouetteStream.flush();
+        silhouetteStream.close();
+
 
 
     }
@@ -37,13 +54,13 @@ public class ExecuteKmeans {
                 String[] numbers = text.split(",");
 
                 List<BigDecimal> coordinates = Arrays.stream(numbers)
-                        .map(ExecuteKmeans::bigDecimalFor)
+                        .map(ExecuteSimpleKmeans::bigDecimalFor)
                         .collect(Collectors.toList());
 
                 System.out.println("Mapping coordinates for " + textFile.getName());
                 BigDecimal[] coordinateArray = coordinates.toArray(new BigDecimal[0]);
 
-                points.add(new EuclidianPoint(coordinateArray, Integer.parseInt(textFile.getName())));
+                points.add(new Point(coordinateArray, Integer.parseInt(textFile.getName())));
 
             } catch (IOException e) {
                 e.printStackTrace();

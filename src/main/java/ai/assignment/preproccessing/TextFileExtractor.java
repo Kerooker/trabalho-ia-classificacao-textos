@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -64,6 +65,8 @@ public class TextFileExtractor {
                 .map(it -> it.replaceAll("(?i)Document_id:.*\\n", ""))
                 .map(it -> it.replaceAll("Subject:.*\\n", ""))
                 .map(String::trim)
-                .distinct();
+                .distinct()
+                .filter(it -> !it.isEmpty())
+                .filter(Objects::nonNull);
     }
 }
