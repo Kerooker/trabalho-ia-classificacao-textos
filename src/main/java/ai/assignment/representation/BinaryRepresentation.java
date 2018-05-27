@@ -1,5 +1,7 @@
 package ai.assignment.representation;
 
+import static ai.assignment.common.Directories.BINARY_DIRECTORY;
+
 import ai.assignment.common.IndividualTextFilesObtainer;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,15 +13,13 @@ import java.util.List;
 
 public class BinaryRepresentation {
 
-    public static void main(String[] args) {
-        List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
+    public static void representAsBinary() {
 
-        IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
+        List<String> tokens = TokenObtainer.getTokensInAlphabeticalOrder();
+
+        IndividualTextFilesObtainer.getAllTextsFromPreProcessedDirectory().parallel().forEach(it -> {
             String index = it.getName();
-            if (!index.matches("\\d*"))return;
-            File directory = new File("binary_representation");
-            directory.mkdir();
-            File processedFile = new File(directory, index);
+            File processedFile = new File(BINARY_DIRECTORY, index);
 
             int[] textVector = new int[tokens.size()];
 
@@ -31,6 +31,13 @@ public class BinaryRepresentation {
                         textVector[tokens.indexOf(word)] = 1;
                     }
                 });
+
+                List<Integer> list = new ArrayList<>();
+                for (int i : textVector)list.add(i);
+                if (!list.contains(1)) {
+                    //This text is useless to the corpus, it contains no useful token.
+                    return;
+                }
 
                 System.out.println("Representing as binary: " + it.getName());
                 String allPositions = Arrays.toString(textVector);

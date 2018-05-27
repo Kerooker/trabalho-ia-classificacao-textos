@@ -16,9 +16,9 @@ public class ExecuteSimpleKmeans {
 
     public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
-        int k = 2;
+        int k = 3;
         SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 1000,
-                new BigDecimal("100.0"), DistanceCalculator.COSINE_SIMILARITY);
+                new BigDecimal("0.03"), DistanceCalculator.COSINE_SIMILARITY);
         simpleKmeans.executeSimpleKmeans();
 
         String result = simpleKmeans.result();
@@ -32,11 +32,11 @@ public class ExecuteSimpleKmeans {
         stream.flush();
         stream.close();
 
-        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
-        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
-        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
-        silhouetteStream.flush();
-        silhouetteStream.close();
+//        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
+//        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
+//        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
+//        silhouetteStream.flush();
+//        silhouetteStream.close();
 
 
 
@@ -45,7 +45,7 @@ public class ExecuteSimpleKmeans {
     private static Point[] loadAllPoints() {
         List<Point> points = new ArrayList<>();
 
-        IndividualTextFilesObtainer.getIndividualTfIdfFiles().forEach(textFile -> {
+        IndividualTextFilesObtainer.getAllTextsFromTfIdfDirectory().forEach(textFile -> {
             try {
                 String text = new String(Files.readAllBytes(textFile.toPath()));
                 text = text.replace("[", "");

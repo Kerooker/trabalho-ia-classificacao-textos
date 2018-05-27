@@ -45,7 +45,7 @@ public enum DistanceCalculator {
             BigDecimal p1Magnitude = calculateMagnitude(p1);
             BigDecimal p2Magnitude = calculateMagnitude(p2);
 
-            System.out.println("Applying formula " + dotProduct + " / " + p1Magnitude + " * " + p1Magnitude );
+//            System.out.println("Applying formula " + dotProduct + " / " + p1Magnitude + " * " + p1Magnitude );
 
             return dotProduct.divide(p1Magnitude.multiply(p2Magnitude), MathContext.DECIMAL32);
         }

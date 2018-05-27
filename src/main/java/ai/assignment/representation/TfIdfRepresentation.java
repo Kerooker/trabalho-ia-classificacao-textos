@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 
 public class TfIdfRepresentation {
 
-    public static void main(String[] args) {
-        List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
+    public static void representTfIdf() {
+        List<String> tokens = new ArrayList<>(TokenObtainer.getTokensInAlphabeticalOrder());
 
         HashMap<String, BigDecimal> tokenIDF = InverseDocumentFrequencyRepresentation.getTokenInverseDocumentFrequencies();
 
-        IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
+        IndividualTextFilesObtainer.getAllTextsFromPreProcessedDirectory().parallel().forEach(it -> {
                 String index = it.getName();
                 if (!index.matches("\\d*"))return;
                 File directory = new File("tf_idf_representation");
@@ -43,6 +43,14 @@ public class TfIdfRepresentation {
                     String allPositions = Arrays.stream(textVector)
                             .map(BigDecimal::toPlainString)
                             .collect(Collectors.toList()).toString();
+
+                    boolean containsNonZero = Arrays.stream(textVector).anyMatch(itt ->
+                            itt.compareTo(BigDecimal.ZERO) > 0
+                    );
+                    if (!containsNonZero) {
+                        //Text is useless to the corpus
+                        return;
+                    }
 
                     System.out.println("Representing TF-IDF: " + it.getName());
                     FileOutputStream stream = new FileOutputStream(processedFile);

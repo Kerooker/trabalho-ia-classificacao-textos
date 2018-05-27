@@ -12,10 +12,10 @@ import java.util.List;
 
 public class TermFrequencyRepresentation {
 
-    public static void main(String[] args) {
-        List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
+    public static void representTermFrequency() {
+        List<String> tokens = new ArrayList<>(TokenObtainer.getTokensInAlphabeticalOrder());
 
-        IndividualTextFilesObtainer.getIndividualTextProcessedFiles().parallel().forEach(it -> {
+        IndividualTextFilesObtainer.getAllTextsFromPreProcessedDirectory().parallel().forEach(it -> {
             String index = it.getName();
             if (!index.matches("\\d*"))return;
             File directory = new File("term_frequency_representation");
@@ -33,6 +33,13 @@ public class TermFrequencyRepresentation {
                     String token = tokens.get(i);
                     int amount = Collections.frequency(words, token);
                     textVector[i] = amount;
+                }
+
+                List<Integer> list = new ArrayList<>();
+                for (int i : textVector)list.add(i);
+                if (!list.contains(1)) {
+                    //This text is useless to the corpus.
+                    return;
                 }
 
                 String allPositions = Arrays.toString(textVector);

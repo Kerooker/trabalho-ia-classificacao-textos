@@ -26,7 +26,7 @@ public class Dataset {
     }
 
     public void updatePoints(Prototype[] centroids) {
-        data.forEachKey(Long.MAX_VALUE, point -> {
+        data.forEachKey(1, point -> {
             Prototype nearestPrototype = point.findNearestPrototype(centroids, distanceCalculator);
             data.put(point, nearestPrototype);
         });
@@ -111,5 +111,9 @@ public class Dataset {
         BigDecimal division = bMinusA.divide(maxOfBoth, MathContext.DECIMAL32);
 
         return division;
+    }
+
+    public int size() {
+        return data.size();
     }
 }

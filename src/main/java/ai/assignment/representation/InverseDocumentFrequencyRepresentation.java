@@ -23,7 +23,7 @@ public class InverseDocumentFrequencyRepresentation {
 
     private static final File file = new File("tokens", "inverse_document_frequencies");
 
-    public static void main(String[] args) throws IOException {
+    public static void representIDF() {
 
         if (file.exists())return;
 
@@ -35,20 +35,26 @@ public class InverseDocumentFrequencyRepresentation {
                 .map(BigDecimal::toPlainString)
                 .collect(Collectors.toList());
 
-        FileOutputStream output = new FileOutputStream(file);
+        FileOutputStream output = null;
+        try {
+            output = new FileOutputStream(file);
+
         file.createNewFile();
         output.write(String.join("\n", invertedDocumentFrequencies).getBytes());
         output.flush();
         output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     public static HashMap<String, BigDecimal> getTokenInverseDocumentFrequencies() {
-        List<String> tokens = new ArrayList<>(TokenObtainer.obtainTokensInOrder());
+        List<String> tokens = new ArrayList<>(TokenObtainer.getTokensInAlphabeticalOrder());
 
         List<File> documents = IndividualTextFilesObtainer
-                .getIndividualTextProcessedFiles().filter(it -> it.getName().matches("\\d+"))
+                .getAllTextsFromPreProcessedDirectory().filter(it -> it.getName().matches("\\d+"))
                 .collect(Collectors.toList());
 
         int totalAmountOfDocuments = documents.size();

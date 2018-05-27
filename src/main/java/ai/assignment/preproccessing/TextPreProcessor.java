@@ -1,5 +1,7 @@
 package ai.assignment.preproccessing;
 
+import static ai.assignment.common.Directories.PRE_PROCESSED_DIRECTORY;
+
 import ai.assignment.common.IndividualTextFilesObtainer;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,16 +12,11 @@ import java.util.stream.Stream;
 public class TextPreProcessor {
 
 
-    public static void main(String[] args) {
-        Stream<File> individualTexts = IndividualTextFilesObtainer.getAllIndividualTextFiles();
+    public static void processAll() {
+        Stream<File> individualTexts = IndividualTextFilesObtainer.getAllTextsFromCorpusDirectory();
 
         individualTexts.parallel().forEach(textFile -> {
-            String fileContent = null;
-            try {
-                fileContent = String.join("", Files.readAllLines(textFile.toPath()));
-            } catch (IOException e) {
-                //Shouldn't happen
-            }
+            String fileContent = getTextFromFile(textFile);
 
             System.out.println("Pipelining text " + textFile.getName());
             String pipelinedText = executePipelineOnText(fileContent);
@@ -27,24 +24,37 @@ public class TextPreProcessor {
         });
     }
 
+    private static String getTextFromFile(File textFile) {
+        String fileContent = null;
+        try {
+            fileContent = String.join("", Files.readAllLines(textFile.toPath()));
+        } catch (IOException e) {
+            //Shouldn't happen
+            e.printStackTrace();
+        }
+        return fileContent;
+    }
+
     private static String executePipelineOnText(String text) {
-        TextPipeline pipeliner = new TextPipeline(text);
+        TextPipeliner pipeliner = new TextPipeliner(text);
         pipeliner.executePipeline();
         return pipeliner.getText();
     }
 
     private static void saveProcessedTextToFile(String pipelinedText, String textFile) {
-        File directory = new File("pre_processed_texts");
-        directory.mkdir();
         try {
-            File outputFile = new File(directory, textFile);
+            File outputFile = new File(PRE_PROCESSED_DIRECTORY, textFile);
+            if (pipelinedText.isEmpty()) {
+                return;
+            }
             outputFile.createNewFile();
             FileOutputStream outputStream = new FileOutputStream(outputFile, false);
             outputStream.write(pipelinedText.getBytes());
             outputStream.flush();
             outputStream.close();
         } catch (IOException e) {
-            throw new RuntimeException("Impossible to happen");
+            //Shouldn't happen
+            e.printStackTrace();
         }
 
     }
