@@ -1,7 +1,7 @@
-package ai.assignment.kmeans;
+package ai.assignment.representation;
 
+import ai.assignment.common.Directories;
 import ai.assignment.common.IndividualTextFilesObtainer;
-import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
 import ai.assignment.kmeans.data.Point;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,37 +12,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-public class ExecuteSimpleKmeans {
 
-    public static void main(String[] args) throws IOException {
-        Point[] points = loadAllPoints();
-        int k = 3;
-        SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 100,
-                new BigDecimal("0.04"), DistanceCalculator.COSINE_SIMILARITY);
-        simpleKmeans.executeKmeans();
+public class SomRepresentation {
 
-        String result = simpleKmeans.result();
+    public static void main(String[] args) throws Exception {
+        File somRepresentation = new File(Directories.TOKENS_DIRECTORY, "som.csv");
 
-        File directory = new File("answer");
-        directory.mkdir();
-        File kmeansFile = new File(directory, "simple_kmeans_cosine");
+        FileOutputStream stream = new FileOutputStream(somRepresentation);
+        String header = String.join(",", TokenObtainer.getTokensInAlphabeticalOrder()) + "\n";
+        stream.write(header.getBytes());
+        stream.flush();
 
-        FileOutputStream stream = new FileOutputStream(kmeansFile);
-        stream.write(result.getBytes());
+        Arrays.stream(loadAllPoints()).forEach(point -> {
+            BigDecimal[] coordinates = point.getCoordinates();
+            List<String> coordinatesAsString = Arrays.stream(coordinates)
+                    .map(BigDecimal::toPlainString)
+                    .collect(Collectors.toList());
+
+            String points = String.join(",", coordinatesAsString) + "\n";
+            try {
+                stream.write(points.getBytes());
+                stream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         stream.flush();
         stream.close();
 
-//        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
-//        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
-//        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
-//        silhouetteStream.flush();
-//        silhouetteStream.close();
-
-
-
     }
 
-    private static Point[] loadAllPoints() {
+
+    private static Point[] loadAllPoints() throws Exception {
         List<Point> points = new ArrayList<>();
 
         IndividualTextFilesObtainer.getAllTextsFromTfIdfDirectory().forEach(textFile -> {
@@ -54,7 +56,7 @@ public class ExecuteSimpleKmeans {
                 String[] numbers = text.split(",");
 
                 List<BigDecimal> coordinates = Arrays.stream(numbers)
-                        .map(ExecuteSimpleKmeans::bigDecimalFor)
+                        .map(SomRepresentation::bigDecimalFor)
                         .collect(Collectors.toList());
 
                 System.out.println("Mapping coordinates for " + textFile.getName());

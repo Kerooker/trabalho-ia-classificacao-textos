@@ -1,4 +1,4 @@
-package ai.assignment.kmeans.calculator.data;
+package ai.assignment.kmeans.data;
 
 import java.math.BigDecimal;
 

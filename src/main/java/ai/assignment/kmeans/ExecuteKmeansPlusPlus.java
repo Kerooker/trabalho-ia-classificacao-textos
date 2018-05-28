@@ -12,20 +12,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-public class ExecuteSimpleKmeans {
+
+public class ExecuteKmeansPlusPlus {
 
     public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
         int k = 3;
-        SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 100,
-                new BigDecimal("0.04"), DistanceCalculator.COSINE_SIMILARITY);
-        simpleKmeans.executeKmeans();
+        KmeansPlusPlus kmeansPlusPlus = new KmeansPlusPlus(points, k, 100,
+                new BigDecimal("0.05"), DistanceCalculator.COSINE_SIMILARITY);
+        kmeansPlusPlus.executeKmeans();
 
-        String result = simpleKmeans.result();
+        String result = kmeansPlusPlus.result();
 
         File directory = new File("answer");
         directory.mkdir();
-        File kmeansFile = new File(directory, "simple_kmeans_cosine");
+        File kmeansFile = new File(directory, "kmeans_plus_plus_cosine");
 
         FileOutputStream stream = new FileOutputStream(kmeansFile);
         stream.write(result.getBytes());
@@ -54,7 +55,7 @@ public class ExecuteSimpleKmeans {
                 String[] numbers = text.split(",");
 
                 List<BigDecimal> coordinates = Arrays.stream(numbers)
-                        .map(ExecuteSimpleKmeans::bigDecimalFor)
+                        .map(ExecuteKmeansPlusPlus::bigDecimalFor)
                         .collect(Collectors.toList());
 
                 System.out.println("Mapping coordinates for " + textFile.getName());

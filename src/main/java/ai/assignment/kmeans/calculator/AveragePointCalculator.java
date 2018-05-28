@@ -1,6 +1,6 @@
 package ai.assignment.kmeans.calculator;
 
-import ai.assignment.kmeans.calculator.data.Point;
+import ai.assignment.kmeans.data.Point;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;

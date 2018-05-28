@@ -1,8 +1,8 @@
 package ai.assignment.kmeans;
 
-import ai.assignment.kmeans.calculator.data.Point;
-import ai.assignment.kmeans.calculator.data.Prototype;
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
+import ai.assignment.kmeans.data.Point;
+import ai.assignment.kmeans.data.Prototype;
 import java.math.BigDecimal;
 
 public class SimpleKmeans extends KMeans {

@@ -1,4 +1,4 @@
-package ai.assignment.kmeans.calculator.data;
+package ai.assignment.kmeans.data;
 
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
 import java.math.BigDecimal;
@@ -47,6 +47,7 @@ public class Point {
         Prototype currentMin = null;
 
         for (Prototype p : centroids) {
+            if (p == null)continue;
             if(currentMin == null){
                 currentMin = p;
                 continue;

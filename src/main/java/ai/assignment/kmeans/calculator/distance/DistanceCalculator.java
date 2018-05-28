@@ -1,6 +1,6 @@
 package ai.assignment.kmeans.calculator.distance;
 
-import ai.assignment.kmeans.calculator.data.Point;
+import ai.assignment.kmeans.data.Point;
 import ch.obermuhlner.math.big.BigDecimalMath;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -45,9 +45,14 @@ public enum DistanceCalculator {
             BigDecimal p1Magnitude = calculateMagnitude(p1);
             BigDecimal p2Magnitude = calculateMagnitude(p2);
 
-//            System.out.println("Applying formula " + dotProduct + " / " + p1Magnitude + " * " + p1Magnitude );
+            BigDecimal similarity = dotProduct.divide(p1Magnitude.multiply(p2Magnitude), MathContext.DECIMAL32);
 
-            return dotProduct.divide(p1Magnitude.multiply(p2Magnitude), MathContext.DECIMAL32);
+            //Formula = 2 * cos⁻1(similarity) / PI
+            BigDecimal distance = BigDecimal.valueOf(2)
+                    .multiply(BigDecimalMath.acos(similarity, MathContext.DECIMAL32))
+                    .divide(BigDecimal.valueOf(Math.PI), MathContext.DECIMAL32);
+
+            return distance;
         }
 
         private BigDecimal calculateDotProduct(Point p1, Point p2) {

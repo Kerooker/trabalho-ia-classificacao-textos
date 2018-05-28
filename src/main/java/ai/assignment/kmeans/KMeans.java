@@ -1,10 +1,10 @@
 package ai.assignment.kmeans;
 
 import ai.assignment.kmeans.calculator.AveragePointCalculator;
-import ai.assignment.kmeans.calculator.data.Dataset;
-import ai.assignment.kmeans.calculator.data.Point;
-import ai.assignment.kmeans.calculator.data.Prototype;
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
+import ai.assignment.kmeans.data.Dataset;
+import ai.assignment.kmeans.data.Point;
+import ai.assignment.kmeans.data.Prototype;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +15,7 @@ public abstract class KMeans {
     protected int k; //Number of clusters
     private int maxIterations;
     private BigDecimal tolerance; //Amount to stop algorithm if difference from one interaction to another is lesser than
-    private DistanceCalculator distanceCalculator;  //What kind of measurement should be used
+    protected DistanceCalculator distanceCalculator;  //What kind of measurement should be used
 
     protected Prototype[] centroids;
 
@@ -43,7 +43,7 @@ public abstract class KMeans {
         return result;
     }
 
-    public void executeSimpleKmeans() {
+    public void executeKmeans() {
         initializeCentroids();
         executeIterations();
     }

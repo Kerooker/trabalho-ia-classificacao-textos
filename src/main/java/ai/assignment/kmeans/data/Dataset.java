@@ -1,4 +1,4 @@
-package ai.assignment.kmeans.calculator.data;
+package ai.assignment.kmeans.data;
 
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
 import java.math.BigDecimal;
@@ -62,6 +62,10 @@ public class Dataset {
         }
 
         return total.divide(new BigDecimal(silhouettes.size()), MathContext.DECIMAL32);
+    }
+
+    public List<Point> points() {
+        return new ArrayList<>(data.keySet());
     }
 
     private Map<Point, BigDecimal> calculateSilhouette() {
