@@ -54,6 +54,7 @@ public class TextFileExtractor {
             writer = new FileWriter(file);
 
             writer.write(text);
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             //Shouldn't happen
