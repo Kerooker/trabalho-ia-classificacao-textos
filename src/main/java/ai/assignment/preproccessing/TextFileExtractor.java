@@ -3,7 +3,7 @@ package ai.assignment.preproccessing;
 import static ai.assignment.common.Directories.CORPUS_DIRECTORY;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -49,14 +49,12 @@ public class TextFileExtractor {
 
     private void writeTextToFile(String text) {
         File file = new File(CORPUS_DIRECTORY, String.valueOf(counter.incrementAndGet()));
-        FileWriter writer;
         try {
-            writer = new FileWriter(file);
-
-            writer.write(text);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
+            FileOutputStream stream = new FileOutputStream(file);
+            stream.write(text.getBytes());
+            stream.flush();
+            stream.close();
+        }catch (Exception e) {
             //Shouldn't happen
         }
     }
