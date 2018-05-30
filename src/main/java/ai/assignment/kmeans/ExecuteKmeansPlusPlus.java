@@ -3,6 +3,7 @@ package ai.assignment.kmeans;
 import ai.assignment.common.IndividualTextFilesObtainer;
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
 import ai.assignment.kmeans.data.Point;
+import ai.assignment.kmeans.data.Prototype;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,36 +20,45 @@ public class ExecuteKmeansPlusPlus {
 
     public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
-        int k = 3;
-        KmeansPlusPlus kmeansPlusPlus = new KmeansPlusPlus(points, k, 100,
-                new BigDecimal("0.05"), DistanceCalculator.COSINE_SIMILARITY);
-        kmeansPlusPlus.executeKmeans();
+        List<String> results = new ArrayList<>();
+        for (int k = 2; k < 10; k++) {
+            KmeansPlusPlus kmeansPlusPlus = new KmeansPlusPlus(points, k, 100,
+                    new BigDecimal("0.00005"), DistanceCalculator.COSINE_SIMILARITY);
+            kmeansPlusPlus.executeKmeans();
 
-        String result = kmeansPlusPlus.result();
+            String result = kmeansPlusPlus.result();
 
-        File directory = new File("answer");
-        directory.mkdir();
-        File kmeansFile = new File(directory, "kmeans_plus_plus_cosine");
+            File directory = new File("answer");
+            directory.mkdir();
+            File kmeansFile = new File(directory, "kmeans_plus_plus_cos_" + k + "_clusters");
 
-        FileOutputStream stream = new FileOutputStream(kmeansFile);
-        stream.write(result.getBytes());
-        stream.flush();
-        stream.close();
-
-//        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
-//        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
-//        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
-//        silhouetteStream.flush();
-//        silhouetteStream.close();
+            Collection<Prototype> values = kmeansPlusPlus.dataSet.data.values();
+            List<String> collect = values.stream().distinct().map(it -> it.prototypeIndex + " " + Collections.frequency(values, it))
+                    .sorted(String::compareTo).collect(Collectors.toList());
+            results.addAll(collect);
+            results.add(String.valueOf(kmeansPlusPlus.silhouette()));
 
 
+            FileOutputStream stream = new FileOutputStream(kmeansFile);
+            stream.write(result.getBytes());
+            stream.flush();
+            stream.close();
+
+        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_cos_" + k + "_clusters");
+        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
+        silhouetteStream.write(kmeansPlusPlus.silhouette().toString().getBytes());
+        silhouetteStream.flush();
+        silhouetteStream.close();
+        }
+
+        System.out.println(results);
 
     }
 
     private static Point[] loadAllPoints() {
         List<Point> points = new ArrayList<>();
 
-        IndividualTextFilesObtainer.getAllTextsFromTfIdfDirectory().forEach(textFile -> {
+        IndividualTextFilesObtainer.getAllTextsFromBinaryDirectory().forEach(textFile -> {
             try {
                 String text = new String(Files.readAllBytes(textFile.toPath()));
                 text = text.replace("[", "");
@@ -79,3 +91,4 @@ public class ExecuteKmeansPlusPlus {
         }
     }
 }
+

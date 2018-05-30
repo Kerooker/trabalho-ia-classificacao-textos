@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class Dataset {
 
-    private final ConcurrentHashMap<Point, Prototype> data = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Point, Prototype> data = new ConcurrentHashMap<>();
     private final DistanceCalculator distanceCalculator;
     private final Random random = new Random();
 
@@ -71,11 +71,8 @@ public class Dataset {
     private Map<Point, BigDecimal> calculateSilhouette() {
         ConcurrentHashMap<Point, BigDecimal> silhouettes = new ConcurrentHashMap<>();
         data.keySet().parallelStream().forEach(point -> {
-            System.out.println(System.currentTimeMillis() + "Start of point " + point.getOwnerText());
             BigDecimal averageDistanceToNonGroupPoints = calculateAverageDistanceToNonGroupPoints(point);
-            System.out.println(System.currentTimeMillis() + "End of average distance to NonGroup" + point.getOwnerText());
             BigDecimal averageDistanceToGroupPoints = calculateAverageDistanceToGroupPoints(point);
-            System.out.println(System.currentTimeMillis() + " End of average distance to grupo " + point.getOwnerText());
 
             silhouettes.put(point, silhouetteFormula(averageDistanceToNonGroupPoints, averageDistanceToGroupPoints));
             System.out.println("Silhouettes size " + silhouettes.size());

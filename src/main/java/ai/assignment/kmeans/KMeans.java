@@ -84,7 +84,7 @@ public abstract class KMeans {
 
             totalDistanceMoved = totalDistanceMoved.add(averagePoint.distanceTo(p, distanceCalculator));
 
-            p.setCoordinates(averagePoint.getCoordinates());
+            p.setCoordinates(averagePoint.cloneCoordinates());
 
         }
         System.out.println("Centroids adjusted");

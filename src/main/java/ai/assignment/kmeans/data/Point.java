@@ -3,6 +3,7 @@ package ai.assignment.kmeans.data;
 import ai.assignment.kmeans.calculator.distance.DistanceCalculator;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,6 +34,9 @@ public class Point {
             currentAverageDistance.set(currentAverageDistance.get().add(distanceTo(point, distanceCalculator)));
 
         });
+        if (myGroup.size() == 0) {
+            return new BigDecimal(Double.MAX_VALUE);
+        }
         BigDecimal averageDistance = currentAverageDistance.get()
                 .divide(new BigDecimal(myGroup.size()), MathContext.DECIMAL32);
 
@@ -93,6 +97,11 @@ public class Point {
 
     public BigDecimal[] getCoordinates() {
         return coordinates;
+    }
+
+    public BigDecimal[] cloneCoordinates() {
+        List<BigDecimal> coordinates = new ArrayList<>(Arrays.asList(this.coordinates));
+        return coordinates.toArray(new BigDecimal[0]);
     }
 
     public void setCoordinates(BigDecimal[] coordinates) {

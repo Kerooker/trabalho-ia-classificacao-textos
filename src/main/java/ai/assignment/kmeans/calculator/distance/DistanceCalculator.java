@@ -46,6 +46,9 @@ public enum DistanceCalculator {
             BigDecimal p2Magnitude = calculateMagnitude(p2);
 
             BigDecimal similarity = dotProduct.divide(p1Magnitude.multiply(p2Magnitude), MathContext.DECIMAL32);
+            if (similarity.compareTo(BigDecimal.ONE) > 0 && similarity.compareTo(new BigDecimal("1.1")) < 0) {
+                similarity = BigDecimal.ONE;
+            }
 
             //Formula = 2 * cos⁻1(similarity) / PI
             BigDecimal distance = BigDecimal.valueOf(2)

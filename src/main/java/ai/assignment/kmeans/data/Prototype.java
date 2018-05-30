@@ -14,7 +14,7 @@ public class Prototype extends Point {
     }
 
     public Prototype(Point point, int prototypeIndex) {
-        super(point.getCoordinates());
+        super(point.cloneCoordinates());
         this.prototypeIndex = prototypeIndex;
     }
 

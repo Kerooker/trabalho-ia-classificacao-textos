@@ -16,30 +16,29 @@ public class ExecuteSimpleKmeans {
 
     public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
-        int k = 3;
-        SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 100,
-                new BigDecimal("0.04"), DistanceCalculator.COSINE_SIMILARITY);
-        simpleKmeans.executeKmeans();
+        for (int k = 2; k < 10; k++) {
+            SimpleKmeans simpleKmeans = new SimpleKmeans(points, k, 100,
+                    new BigDecimal("0.05"), DistanceCalculator.COSINE_SIMILARITY);
+            simpleKmeans.executeKmeans();
 
-        String result = simpleKmeans.result();
+            String result = simpleKmeans.result();
 
-        File directory = new File("answer");
-        directory.mkdir();
-        File kmeansFile = new File(directory, "simple_kmeans_cosine");
+            File directory = new File("answer");
+            directory.mkdir();
+            File kmeansFile = new File(directory, "simple_kmeans_cosine_" + k + "_clusters");
 
-        FileOutputStream stream = new FileOutputStream(kmeansFile);
-        stream.write(result.getBytes());
-        stream.flush();
-        stream.close();
+            FileOutputStream stream = new FileOutputStream(kmeansFile);
+            stream.write(result.getBytes());
+            stream.flush();
+            stream.close();
 
-//        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_" + k + "_clusters");
-//        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
-//        silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
-//        silhouetteStream.flush();
-//        silhouetteStream.close();
+            File silhouetteFile = new File(directory, "simple_kmeans_cosine_silhouette_" + k + "_clusters");
+            FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
+            silhouetteStream.write(simpleKmeans.silhouette().toString().getBytes());
+            silhouetteStream.flush();
+            silhouetteStream.close();
 
-
-
+        }
     }
 
     private static Point[] loadAllPoints() {

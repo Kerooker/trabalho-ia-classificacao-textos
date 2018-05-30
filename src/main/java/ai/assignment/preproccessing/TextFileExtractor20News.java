@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class TextFileExtractor {
+public class TextFileExtractor20News {
 
     private File file;
     private String allTexts;
     private AtomicLong counter;
 
-    public TextFileExtractor(File file, AtomicLong counter) {
+    public TextFileExtractor20News(File file, AtomicLong counter) {
         this.file = file;
         this.counter = counter;
     }

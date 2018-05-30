@@ -1,5 +1,6 @@
 package ai.assignment.common;
 
+import static ai.assignment.common.Directories.BINARY_DIRECTORY;
 import static ai.assignment.common.Directories.TF_IDF_DIRECTORY;
 import static ai.assignment.common.Directories.TOKENS_DIRECTORY;
 
@@ -28,6 +29,11 @@ public class IndividualTextFilesObtainer {
 
     public static Stream<File> getAllTextsFromTfIdfDirectory() {
         List<File> individualTexts = Arrays.asList(TF_IDF_DIRECTORY.listFiles());
+        return individualTexts.stream();
+    }
+
+    public static Stream<File> getAllTextsFromBinaryDirectory() {
+        List<File> individualTexts = Arrays.asList(BINARY_DIRECTORY.listFiles());
         return individualTexts.stream();
     }
 

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class TextExtractor {
+public class TextExtractor20News {
 
     private static final FileFilter textFileFilter = pathname -> !pathname.isDirectory();
 
@@ -18,7 +18,7 @@ public class TextExtractor {
         List<File> unprocessedTextFiles = Arrays.asList(CORPUS_DIRECTORY.listFiles(textFileFilter));
 
         unprocessedTextFiles.parallelStream().forEach(unprocessedTextFile -> {
-            new TextFileExtractor(unprocessedTextFile, counter).extractTexts();
+            new TextFileExtractor20News(unprocessedTextFile, counter).extractTexts();
 
             System.out.println("Deleting text file " + unprocessedTextFile.getName());
             unprocessedTextFile.delete();
