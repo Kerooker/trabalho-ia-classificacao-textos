@@ -40,4 +40,9 @@ public class IndividualTextFilesObtainer {
     public static File getTokensFile() {
         return new File(TOKENS_DIRECTORY, "ordered_tokens");
     }
+
+    public static Stream<File>getAllTextsFromTermFrequencyDirectory() {
+        List<File> individualTexts = Arrays.asList(Directories.TERM_FREQUENCY_DIRECTORY.listFiles());
+        return individualTexts.stream();
+    }
 }

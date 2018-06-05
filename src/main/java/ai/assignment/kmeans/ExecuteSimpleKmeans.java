@@ -70,10 +70,11 @@ public class ExecuteSimpleKmeans {
     }
 
     private static  BigDecimal bigDecimalFor(String s) {
-        if (s.equals("0.000000")) {
+        BigDecimal b = new BigDecimal(s);
+        if (b.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }else {
-            return new BigDecimal(s);
+            return b;
         }
     }
 }

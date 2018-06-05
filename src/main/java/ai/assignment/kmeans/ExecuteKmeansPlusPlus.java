@@ -13,45 +13,55 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ExecuteKmeansPlusPlus {
 
+    private static final int k = 2;
+    private static final int maxIterations = 100;
+    private static final DistanceCalculator distance = DistanceCalculator.EUCLIDIAN;
+    private static final BigDecimal tolerance = new BigDecimal("0.0005");
+
     public static void main(String[] args) throws IOException {
         Point[] points = loadAllPoints();
         List<String> results = new ArrayList<>();
-        for (int k = 2; k < 10; k++) {
+        for (int k = 2; k < 20; k++) {
+            Map<Integer, Integer> values = new HashMap<>();
             KmeansPlusPlus kmeansPlusPlus = new KmeansPlusPlus(points, k, 100,
-                    new BigDecimal("0.00005"), DistanceCalculator.COSINE_SIMILARITY);
+                    new BigDecimal("1.0"), DistanceCalculator.EUCLIDIAN);
             kmeansPlusPlus.executeKmeans();
 
             String result = kmeansPlusPlus.result();
 
             File directory = new File("answer");
             directory.mkdir();
-            File kmeansFile = new File(directory, "kmeans_plus_plus_cos_" + k + "_clusters");
+            File kmeansFile = new File(directory, "kmeans_plus_plus_euc_" + k + "_clusters");
 
-            Collection<Prototype> values = kmeansPlusPlus.dataSet.data.values();
-            List<String> collect = values.stream().distinct().map(it -> it.prototypeIndex + " " + Collections.frequency(values, it))
-                    .sorted(String::compareTo).collect(Collectors.toList());
-            results.addAll(collect);
-            results.add(String.valueOf(kmeansPlusPlus.silhouette()));
 
+            Collection<Prototype> protos = kmeansPlusPlus.dataSet.data.values();
+            protos.parallelStream().distinct().forEach(it -> {
+                values.put(it.prototypeIndex, Collections.frequency(protos, it));
+            });
 
             FileOutputStream stream = new FileOutputStream(kmeansFile);
             stream.write(result.getBytes());
             stream.flush();
             stream.close();
 
-        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_cos_" + k + "_clusters");
-        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
-        silhouetteStream.write(kmeansPlusPlus.silhouette().toString().getBytes());
-        silhouetteStream.flush();
-        silhouetteStream.close();
+//        File silhouetteFile = new File(directory, "simple_kmeans_silhouette_cos_" + k + "_clusters");
+//        FileOutputStream silhouetteStream = new FileOutputStream(silhouetteFile);
+//        silhouetteStream.write(kmeansPlusPlus.silhouette().toString().getBytes());
+//        silhouetteStream.flush();
+//        silhouetteStream.close();
+            results.add(values.toString());
+            System.out.println(values.toString());
         }
 
         System.out.println(results);
+
 
     }
 
@@ -84,10 +94,11 @@ public class ExecuteKmeansPlusPlus {
     }
 
     private static  BigDecimal bigDecimalFor(String s) {
-        if (s.equals("0.000000")) {
+        BigDecimal b = new BigDecimal(s);
+        if (b.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }else {
-            return new BigDecimal(s);
+            return b;
         }
     }
 }
